@@ -43,13 +43,24 @@ do(State) ->
         ["list", Package] ->
             list(Package),
             {ok, State};
+        [] ->
+            help(),
+            {ok, State};
         Command ->
+            help(),
             ?PRV_ERROR({bad_command, Command})
     end.
 
 -spec format_error(any()) -> iolist().
 format_error(Error) ->
     io_lib:format("~p", [Error]).
+
+help() ->
+    ec_talk:say("hex owner:"),
+    ec_talk:say("  add <package> <email>"),
+    ec_talk:say("  remove <package> <email>"),
+    ec_talk:say("  list <package>"),
+    ec_talk:say("(commands only available if you are the owner of the given package)").
 
 add(Package, Email) ->
     {ok, Auth} = rebar3_hex_config:auth(),
